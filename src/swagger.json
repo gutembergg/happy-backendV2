@@ -1,0 +1,103 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Orphanages help",
+    "description": "Api of help orphanages",
+    "termsOfService": "http://example.com/terms/",
+    "contact": {
+      "name": "Gutembergue Mascarenhas",
+      "email": "gmascarenhas3001@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3333/api",
+      "description": "url of tests"
+    }
+  ],
+  "paths": {
+    "/orphanages": {
+      "post": {
+        "summary": "Register orphanage",
+        "description": "create orphanage in database",
+        "tags": ["Orphanage"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/Orphanage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error"
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "List of orphanage",
+        "description": "List all orphanage",
+        "tags": ["Orphanage"],
+        "responses": {
+          "500": {
+            "description": "Internal server error"
+          },
+          "200": {
+            "description": "succesfuly",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Orphanage": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "about": {
+            "type": "string"
+          },
+          "instructions": {
+            "type": "string"
+          },
+          "open_hours": {
+            "type": "string"
+          },
+          "open_at_weekends": {
+            "type": "boolean",
+            "default": "false"
+          }
+        }
+      }
+    }
+  }
+}
