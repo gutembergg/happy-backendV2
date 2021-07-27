@@ -1,20 +1,29 @@
 import { Request, Response } from 'express'
+import Orphanage from '../models/Orphanage'
 import OrphanageRepository from '../repositories/repository/OrphanageRepository'
 import CreateOrphanagesService from '../services/CreateOrphanagesService'
 import ShowOrphanageByIdService from '../services/ShowOrphanageByIdService'
+import imagesViews from '../views/imagesViews'
 import orphanagesViews from '../views/orphanagesViews'
 
 class OrphanageController {
   public async index(req: Request, res: Response): Promise<Response> {
+    const headerHost = String(req.headers.host)
+    const originalURL = req.originalUrl
+
     const orphanageRepository = new OrphanageRepository()
 
     const orphanages = await orphanageRepository.findAll()
 
-    return res.json(orphanages)
+    return res.json(
+      orphanagesViews.renderMAny(orphanages, headerHost, originalURL)
+    )
   }
 
   public async show(req: Request, res: Response): Promise<Response> {
     const { id } = req.params
+    const headerHost = String(req.headers.host)
+    const originalURL = req.originalUrl
 
     const orphanageRepository = new OrphanageRepository()
     const orphanageByIdService = new ShowOrphanageByIdService(
@@ -23,7 +32,7 @@ class OrphanageController {
 
     const orphanage = await orphanageByIdService.execute(id)
 
-    return res.json(orphanagesViews.render(orphanage))
+    return res.json(orphanagesViews.render(orphanage, headerHost, originalURL))
   }
 
   public async create(req: Request, res: Response): Promise<Response> {
