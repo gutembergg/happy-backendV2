@@ -1,4 +1,5 @@
-import IOrphanageRepository from '../repositories/interfaces/IOrphanageRepository'
+import Image from '../models/Image'
+import IImageOrphanage from '../repositories/interfaces/IImageOrphanage'
 
 interface IRequest {
   path: string
@@ -6,11 +7,17 @@ interface IRequest {
 }
 
 class UploasService {
-  private _orphanageRepository: IOrphanageRepository
+  private _imagesRepository: IImageOrphanage
 
-  constructor(orphanageRepository: IOrphanageRepository) {
-    this._orphanageRepository = orphanageRepository
+  constructor(imagesRepository: IImageOrphanage) {
+    this._imagesRepository = imagesRepository
   }
 
-  public async execute({ path, orphanage_id }: IRequest) {}
+  public async execute({ path, orphanage_id }: IRequest): Promise<Image> {
+    const image = await this._imagesRepository.create({ path, orphanage_id })
+
+    return image
+  }
 }
+
+export default UploasService

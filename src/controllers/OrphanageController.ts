@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import Orphanage from '../models/Orphanage'
 import OrphanageRepository from '../repositories/repository/OrphanageRepository'
 import CreateOrphanagesService from '../services/CreateOrphanagesService'
 import ShowOrphanageByIdService from '../services/ShowOrphanageByIdService'
+import orphanagesViews from '../views/orphanagesViews'
 
 class OrphanageController {
   public async index(req: Request, res: Response): Promise<Response> {
@@ -23,10 +23,15 @@ class OrphanageController {
 
     const orphanage = await orphanageByIdService.execute(id)
 
-    return res.json(orphanage)
+    return res.json(orphanagesViews.render(orphanage))
   }
 
   public async create(req: Request, res: Response): Promise<Response> {
+    const requestImages = req.files as Express.Multer.File[]
+    const images = requestImages.map(image => {
+      return { path: image.filename, orphanage_id: '' }
+    })
+
     const {
       name,
       latitude,
@@ -49,7 +54,8 @@ class OrphanageController {
       about,
       instructions,
       open_hours,
-      open_at_weekends
+      open_at_weekends,
+      images
     })
 
     return res.status(201).json(orphanage)

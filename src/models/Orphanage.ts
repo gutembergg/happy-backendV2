@@ -2,8 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  OneToMany,
   PrimaryGeneratedColumn
 } from 'typeorm'
+import Image from './Image'
 
 @Entity('orphanages')
 class Orphanage {
@@ -36,6 +39,12 @@ class Orphanage {
 
   @CreateDateColumn()
   updated_at: Date
+
+  @OneToMany(() => Image, image => image.orphanage, {
+    cascade: ['insert', 'update']
+  })
+  @JoinColumn({ name: 'orphanage_id' })
+  images: Image[]
 }
 
 export default Orphanage

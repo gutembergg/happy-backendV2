@@ -1,5 +1,9 @@
+import Image from '../models/Image'
 import Orphanage from '../models/Orphanage'
+import IImageOrphanage from '../repositories/interfaces/IImageOrphanage'
 import IOrphanageRepository from '../repositories/interfaces/IOrphanageRepository'
+import ImageOrphanagerepository from '../repositories/repository/ImageOrphanageRepository'
+import UploasService from './UploadsService'
 
 interface Request {
   name: string
@@ -9,6 +13,10 @@ interface Request {
   instructions: string
   open_hours: string
   open_at_weekends: boolean
+  images: Array<{
+    path: string
+    orphanage_id: string
+  }>
 }
 
 class CreateOrphanagesService {
@@ -25,7 +33,8 @@ class CreateOrphanagesService {
     about,
     instructions,
     open_hours,
-    open_at_weekends
+    open_at_weekends,
+    images
   }: Request): Promise<Orphanage> {
     const orphanage = await this._orphanageRepository.create({
       name,
@@ -35,6 +44,16 @@ class CreateOrphanagesService {
       instructions,
       open_hours,
       open_at_weekends
+    })
+
+    const imageRepository = new ImageOrphanagerepository()
+    const uploadImageService = new UploasService(imageRepository)
+
+    images.map(async image => {
+      return await uploadImageService.execute({
+        path: image.path,
+        orphanage_id: orphanage.id
+      })
     })
 
     console.log('id-orphanage: ', orphanage.id)

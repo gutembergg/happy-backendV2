@@ -19,7 +19,7 @@ class Image {
   @Column()
   orphanage_id: string
 
-  @ManyToOne(() => Orphanage)
+  @ManyToOne(() => Orphanage, orphanage => orphanage.images)
   @JoinColumn({ name: 'orphanage_id' })
   orphanage: Orphanage
 

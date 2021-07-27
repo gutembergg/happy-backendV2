@@ -8,6 +8,7 @@ import express, {
 } from 'express'
 import './database'
 import cors from 'cors'
+import { resolve } from 'path'
 import swaggerUi from 'swagger-ui-express'
 import AppErros from './erros/AppErros'
 import routes from './routes'
@@ -18,6 +19,7 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
+app.use('/files', express.static(resolve(__dirname, '..', 'uploads')))
 app.use(routes)
 
 app.use(
